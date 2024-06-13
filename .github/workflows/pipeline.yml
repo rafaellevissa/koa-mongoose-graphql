@@ -71,8 +71,8 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |-
-            docker container stop $APP_NAME || true
-            docker container rm $APP_NAME || true
+            docker container stop ${{ env.APP_NAME}} || true
+            docker container rm ${{ env.APP_NAME}} || true
             docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            docker run -d --restart=unless-stopped --name $APP_NAME ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            docker run -d --restart=unless-stopped --name ${{ env.APP_NAME}} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
