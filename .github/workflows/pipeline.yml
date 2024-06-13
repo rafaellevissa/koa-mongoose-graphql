@@ -10,6 +10,13 @@ on:
     branches: -develop
       - main
 
+permissions: write-all
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: rafaellevissa/bank-app:latest
+  APP_NAME: koa-mongoose-graphql
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -26,10 +33,9 @@ jobs:
       - run: npm install
       - run: npm run test
 
-  build_and_publish:
+  build:
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: ghcr.io/thiagotfsilva/bank-app:latest
+    needs: tests
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -38,13 +44,29 @@ jobs:
         if: success()
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
-          username: thiagotfsilva
-          password: ${{ secrets.GHCR_PAT }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image api
-        run: docker build -t ${{ env.IMAGE_NAME }} .
+        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} .
+
       - name: Publish image api
-        run: docker push ${{ env.IMAGE_NAME }}
-      - name: Up Image
-        run: docker run -d -p 4000:4000 --name app-container ${{ env.IMAGE_NAME }}
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: EC2 Deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |-
+            docker container stop $APP_NAME || true
+            docker container rm $APP_NAME || true
+            docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            docker run -d --restart=unless-stopped --name $APP_NAME ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
