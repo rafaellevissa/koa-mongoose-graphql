@@ -1,5 +1,7 @@
 # koa-mongoose-graphql
 
+Backend deploy: http://35.175.185.117:4000/
+
 ## Challenge
 
 - Backend: MongoDB, NodeJS, Koajs, GraphQL
