@@ -74,4 +74,4 @@ jobs:
             docker container rm ${{ env.APP_NAME}} || true
             docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            docker run -d --restart=unless-stopped -p --net host --name ${{ env.APP_NAME}} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            docker run -d --restart=unless-stopped --net host --name ${{ env.APP_NAME}} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
