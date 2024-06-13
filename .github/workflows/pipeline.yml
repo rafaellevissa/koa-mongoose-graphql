@@ -32,7 +32,7 @@ jobs:
         run: npm install
 
       - name: Create dotenv
-        run: echo "${{ env.secrets }}" | base64 --decode > .env
+        run: echo "${{ secrets.ENV }}" | base64 --decode > .env
 
       - run: npm run test
 
@@ -52,7 +52,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create dotenv
-        run: echo "${{ env.secrets }}" | base64 --decode > .env
+        run: echo "${{ secrets.ENV }}" | base64 --decode > .env
 
       - name: Build image api
         run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} .
