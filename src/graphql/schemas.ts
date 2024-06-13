@@ -31,20 +31,19 @@ export const typeDefs = `#graphql
     transactions: [Transaction]
   }
 
+  type UserAccount {
+    user: User!
+    account: Account!
+    token: String!
+  }
+
   type Mutation {
-    addUser(user: AddUserInput!): User
-    addAccount(account: AddAccountInput!): Account
+    createUser(data: CreateUserInput!): UserAccount
     addTransaction(transaction: AddTransactionInput!): Transaction
     login(login: Login!): Auth
   }
 
-  input AddAccountInput {
-    numberAccount: String!
-    userId: ID!
-    balance: Float!
-  }
-
-  input AddUserInput {
+  input CreateUserInput {
     name: String!
     taxId: String!
     password: String!

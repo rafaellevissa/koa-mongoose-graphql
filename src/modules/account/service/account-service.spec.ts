@@ -6,12 +6,7 @@ import AppError from "../../../shared/error/app-error";
 describe("Account Service", () => {
   let accountRepository: AccountInMemoryRepository;
   let accountService: AccountService;
-
-  const data = {
-    numberAccount: "333222322",
-    userId: new Types.ObjectId(),
-    balance: 0,
-  };
+  let userId = new Types.ObjectId();
 
   beforeAll(() => {
     accountRepository = new AccountInMemoryRepository();
@@ -19,14 +14,13 @@ describe("Account Service", () => {
   });
 
   test("Should create a account", async () => {
-    const account = await accountService.create(data);
-    expect(account.numberAccount).toBe(data.numberAccount);
-    expect(account.userId).toBe(data.userId);
-    expect(account.balance).toBe(data.balance);
+    const account = await accountService.create(userId);
+    expect(account.userId).toBe(userId);
+    expect(account.balance).toBe(0);
   });
 
   test("Should return a accounte by id", async () => {
-    const account = await accountService.create(data);
+    const account = await accountService.create(userId);
     const finderAccount = await accountService.getAccount(account._id);
     expect(finderAccount._id).toEqual(account._id);
     expect(finderAccount.userId).toEqual(account.userId);

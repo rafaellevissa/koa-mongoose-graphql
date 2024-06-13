@@ -11,7 +11,8 @@ const PORT = process.env.PORT;
 
 const SECRET = process.env.SECRET_JWT;
 
-const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`;
+// const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`;
+const MONGO_URL = process.env.MONGO_URL;
 
 export const config = {
   mongo: {

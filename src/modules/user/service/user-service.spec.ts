@@ -16,14 +16,16 @@ describe("User-service", () => {
   userService = new UserService(userInMemoryRepository);
 
   test("Should create a user", async () => {
-    const user = await userService.createUser(data);
+    const { user, token } = await userService.createUser(data);
     expect(user.name).toBe("User name");
     expect(user.taxId).toBe("12345678912");
     expect(typeof user.password).toBe("string");
+    expect(typeof user.password).toBe("string");
+    expect(typeof token).toBe("string");
   });
 
   test("Should return a user by id", async () => {
-    const user = await userService.createUser(data);
+    const { user } = await userService.createUser(data);
     const finderUser = await userService.findUser(user._id);
     expect(finderUser.name).toBe("User name");
     expect(finderUser.taxId).toBe("12345678912");

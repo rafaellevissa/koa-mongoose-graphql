@@ -35,6 +35,7 @@ const resolvers = {
       return await transactionService.fetch();
     },
   },
+
   Account: {
     async userId(account: Account, context: any) {
       return await userService.findUser(account.userId);
@@ -51,12 +52,10 @@ const resolvers = {
   },
 
   Mutation: {
-    async addUser(_: any, { user }: { user: IUser }) {
-      return await userService.createUser(user);
-    },
-
-    async addAccount(_: any, { account }: { account: IAccount }) {
-      return await accountService.create(account);
+    async createUser(_: any, { data }: { data: IUser }) {
+      const { user, token } = await userService.createUser(data);
+      const account = await accountService.create(user._id);
+      return { user, account, token };
     },
 
     async addTransaction(
