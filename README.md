@@ -1,6 +1,6 @@
 # koa-mongoose-graphql
 
-Backend deploy: http://35.175.185.117:4000/
+Backend deploy: http://35.175.185.117:4000/ (AWS ec2)
 
 front: https://github.com/rafaellevissa/react-relay-graphql
 
