@@ -1,0 +1,50 @@
+name: Pipeline CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/pipelines-actions
+  pull_request:
+    branches: -develop
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm install
+      - run: npm run test
+
+  build_and_publish:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: ghcr.io/thiagotfsilva/bank-app:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Github Registrey
+        if: success()
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: thiagotfsilva
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Build image api
+        run: docker build -t ${{ env.IMAGE_NAME }} .
+      - name: Publish image api
+        run: docker push ${{ env.IMAGE_NAME }}
+      - name: Up Image
+        run: docker run -d -p 4000:4000 --name app-container ${{ env.IMAGE_NAME }}
