@@ -6,9 +6,6 @@ on:
       - main
       - develop
       - feature/pipelines-actions
-  pull_request:
-    branches: -develop
-      - main
 
 permissions: write-all
 
