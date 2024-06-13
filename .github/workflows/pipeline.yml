@@ -23,11 +23,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
+
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: npm install
+      - name: Installing Dependencies
+        run: npm install
+
+      - name: Create dotenv
+        run: echo ${{ env.secrets }} > .env
+
       - run: npm run test
 
   build:
@@ -44,6 +50,9 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create dotenv
+        run: echo ${{ env.secrets }} > .env
 
       - name: Build image api
         run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} .
