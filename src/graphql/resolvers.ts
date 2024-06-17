@@ -1,5 +1,4 @@
 import { Types } from "mongoose";
-import { IAccount } from "../modules/account/model/account";
 import { IUser } from "../modules/user/model/user";
 import { ITransaction } from "../modules/transaction/model/transaction";
 import Account from "../modules/account/entity/account";
@@ -20,6 +19,18 @@ const authService = new AuthService(userRepository);
 
 const resolvers = {
   Query: {
+    async accountById(
+      _: any,
+      { userId }: { userId: Types.ObjectId },
+      context: any
+    ) {
+      await isAuthenticated(context.token);
+      return await accountService.getAccountByUser(userId);
+    },
+    async userTaxId(_: any, { taxId }: { taxId: string }, context: any) {
+      await isAuthenticated(context.token);
+      return await userService.findUserByTaxId(taxId);
+    },
     async user(_: any, { id }: { id: Types.ObjectId }, context: any) {
       await isAuthenticated(context.token);
       return await userService.findUser(id);
@@ -33,6 +44,24 @@ const resolvers = {
     async transactions(_: any, args: any, context: any) {
       await isAuthenticated(context.token);
       return await transactionService.fetch();
+    },
+
+    async transactionBySender(
+      _: any,
+      { senderId }: { senderId: Types.ObjectId },
+      context: any
+    ) {
+      await isAuthenticated(context.token);
+      return await transactionService.findTransactionsBySender(senderId);
+    },
+
+    async transactionByReceiver(
+      _: any,
+      { receiverId }: { receiverId: Types.ObjectId },
+      context: any
+    ) {
+      await isAuthenticated(context.token);
+      return await transactionService.findTransactionsByReceiver(receiverId);
     },
   },
 

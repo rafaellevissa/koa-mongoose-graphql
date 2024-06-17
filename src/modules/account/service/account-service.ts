@@ -21,6 +21,15 @@ class AccountService {
     return account;
   }
 
+  async getAccountByUser(userId: Types.ObjectId): Promise<Account> {
+    const account = await this.accountRepository.findByUserId(userId);
+    if (!account) {
+      throw new AppError("Account not found");
+    }
+
+    return account;
+  }
+
   private createAccountNumber(): string {
     const digitNumber = 10;
     let numberAccount = "";

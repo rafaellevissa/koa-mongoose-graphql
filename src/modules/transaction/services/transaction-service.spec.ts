@@ -8,6 +8,7 @@ import User from "../../user/entity/user";
 import { ITransaction } from "../model/transaction";
 import { IAccount } from "../../account/model/account";
 import Account from "../../account/entity/account";
+import AppError from "../../../shared/error/app-error";
 
 describe("Transaction Service", () => {
   const userData1: IUser = {
@@ -81,5 +82,19 @@ describe("Transaction Service", () => {
   test("Should fetch all users", async () => {
     const users = await transactionService.fetch();
     expect(users.length).toBe(1);
+  });
+
+  test("Should retur a transactions collections by sender Id", async () => {
+    const transactions = await transactionService.findTransactionsBySender(
+      sender._id
+    );
+    expect(transactions.length).toBe(1);
+  });
+
+  test("Should retur a transactions collections by receiver Id", async () => {
+    const transactions = await transactionService.findTransactionsByReceiver(
+      receiver._id
+    );
+    expect(transactions.length).toBe(1);
   });
 });

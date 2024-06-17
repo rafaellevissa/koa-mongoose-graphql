@@ -9,11 +9,14 @@ import { config } from "./config/config";
 import { connectDB } from "./shared/database";
 import { typeDefs } from "./graphql/schemas";
 import { resolvers } from "./graphql/resolvers";
+import { decodeToken } from "./http/middleware/decodeToken";
 
 const initializeServer = async () => {
   const port = config.server.port;
   const app = new Koa();
   const httpServer = http.createServer(app.callback());
+
+  app.use(decodeToken);
 
   // Initialize ApolloServer
   const server = new ApolloServer({
@@ -33,7 +36,7 @@ const initializeServer = async () => {
   await server.start();
   app.use(
     koaMiddleware(server, {
-      context: async ({ ctx }) => ({ token: ctx.headers.authorization }),
+      context: async ({ ctx }) => ({ token: ctx.state.token }),
     })
   );
 

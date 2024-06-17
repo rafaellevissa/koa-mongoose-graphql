@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import AppError from "../../../shared/error/app-error";
 import AccountRepository from "../../account/repositories/account-repository";
 import Transaction from "../entity/transaction";
@@ -41,6 +42,20 @@ class TransactionService {
 
   async fetch(): Promise<Transaction[]> {
     return await this.transactionRepository.fetch();
+  }
+
+  async findTransactionsBySender(
+    senderId: Types.ObjectId
+  ): Promise<Transaction[]> {
+    return await this.transactionRepository.findTransactionsBySender(senderId);
+  }
+
+  async findTransactionsByReceiver(
+    receiverId: Types.ObjectId
+  ): Promise<Transaction[]> {
+    return await this.transactionRepository.findTransactionsByReceiver(
+      receiverId
+    );
   }
 }
 

@@ -19,8 +19,8 @@ describe("Account Service", () => {
     expect(account.balance).toBe(0);
   });
 
-  test("Should return a accounte by id", async () => {
-    const account = await accountService.create(userId);
+  test("Should return a account by id", async () => {
+    const account = await accountService.create(new Types.ObjectId());
     const finderAccount = await accountService.getAccount(account._id);
     expect(finderAccount._id).toEqual(account._id);
     expect(finderAccount.userId).toEqual(account.userId);
@@ -34,6 +34,25 @@ describe("Account Service", () => {
       AppError
     );
     await expect(accountService.getAccount(accountId)).rejects.toThrow(
+      "Account not found"
+    );
+  });
+
+  test("Should return a account by userId", async () => {
+    const account = await accountService.create(new Types.ObjectId());
+    const finderAccount = await accountService.getAccountByUser(account.userId);
+    expect(finderAccount._id).toEqual(account._id);
+    expect(finderAccount.userId).toEqual(account.userId);
+    expect(finderAccount.balance).toEqual(account.balance);
+    expect(finderAccount.numberAccount).toEqual(account.numberAccount);
+  });
+
+  test("should throw an error when the account is not found", async () => {
+    const accountId = new Types.ObjectId();
+    await expect(accountService.getAccountByUser(accountId)).rejects.toThrow(
+      AppError
+    );
+    await expect(accountService.getAccountByUser(accountId)).rejects.toThrow(
       "Account not found"
     );
   });

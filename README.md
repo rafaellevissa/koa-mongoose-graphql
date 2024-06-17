@@ -4,6 +4,27 @@ Backend deploy: http://35.175.185.117:4000/ (AWS ec2)
 
 front: https://github.com/rafaellevissa/react-relay-graphql
 
+# Como rodar o projeto
+
+## Clone o repositório
+` git clon https://github.com/thiagotfsilva/koa-mongoose-graphql.git `
+
+## Para iniciar com docker 
+
+` docker build -t bank-image . `
+` docker run -d -p 4000:4000 --name bank-app bank-image `
+
+### Verificar se os containres subiram
+` docker ps `
+
+### Verificar os logs da api
+` docker logs bank-app `
+
+
+## Para iniciar com npm
+` npm install `
+` npm run dev `
+
 ## Challenge
 
 - Backend: MongoDB, NodeJS, Koajs, GraphQL

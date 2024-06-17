@@ -28,6 +28,14 @@ class UserService {
     return { user, token };
   }
 
+  async findUserByTaxId(taxId: string): Promise<User> {
+    const user = await this.userRepository.findUserByTaxId(taxId);
+    if (!user) {
+      throw new AppError("User not found");
+    }
+    return user;
+  }
+
   async findUser(id: Types.ObjectId): Promise<User> {
     const user = await this.userRepository.findUser(id);
 

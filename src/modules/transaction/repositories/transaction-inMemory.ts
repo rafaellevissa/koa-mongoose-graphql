@@ -21,6 +21,20 @@ class TransactionInMemory implements TransactionRepository {
       return transaction;
     });
   }
+
+  async findTransactionsBySender(
+    senderId: Types.ObjectId
+  ): Promise<Transaction[]> {
+    return this.transactions.filter((sender) => sender.sender === senderId);
+  }
+
+  async findTransactionsByReceiver(
+    receiverId: Types.ObjectId
+  ): Promise<Transaction[]> {
+    return this.transactions.filter(
+      (receiver) => receiver.receiver === receiverId
+    );
+  }
 }
 
 export default TransactionInMemory;

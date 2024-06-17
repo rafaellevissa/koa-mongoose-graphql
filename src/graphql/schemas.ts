@@ -26,9 +26,13 @@ export const typeDefs = `#graphql
   }
 
   type Query {
+    userTaxId(taxId: String!): User
     user(id: ID!): User
+    accountById(userId: ID!): Account
     account(id: ID!): Account
     transactions: [Transaction]
+    transactionBySender(senderId: ID!): [Transaction]
+    transactionByReceiver(receiverId: ID!): [Transaction]
   }
 
   type UserAccount {
